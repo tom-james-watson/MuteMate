@@ -71,7 +71,6 @@ function App() {
         if (!voice) {
             voice = availableVoices.find((v) => v.name.includes("Google"));
         }
-        return voice || availableVoices[0];
     };
 
     const speak = (text: string, id: number) => {
@@ -209,7 +208,7 @@ function App() {
                     <DropdownMenu.Content
                         side="top"
                         align="end"
-                        className="bg-gray-200 text-gray-900 rounded-lg shadow-lg py-1 w-32"
+                        className="bg-gray-200 text-gray-900 rounded-lg shadow-lg py-1 w-32 z-50" // Added z-50
                     >
                         <DropdownMenu.Item
                             onClick={clearHistory}
@@ -246,7 +245,7 @@ function App() {
         <div className="bg-gray-800 text-gray-100 min-h-screen">
             {/* Mobile layout */}
             <div className="md:hidden flex flex-col h-screen">
-                <div className="border-b border-gray-700 sticky top-0 bg-gray-800 z-10">
+                <div className="border-b border-gray-700 sticky top-0 bg-gray-800 z-20">
                     <div className="w-full max-w-2xl p-4 flex items-center space-x-2 mx-auto">
                         {inputSection}
                     </div>
