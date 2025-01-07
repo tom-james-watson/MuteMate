@@ -210,26 +210,51 @@ function App() {
                                 }
                                 className="w-full p-2 bg-gray-600 rounded"
                             >
-                                {voices.map((voice) => {
-                                    const isBestVoice =
-                                        voice.name === bestVoice?.name;
-                                    const hasLanguageInName =
-                                        voice.name.includes("[") ||
-                                        voice.name.includes("(");
-
-                                    return (
+                                {/* Default voice first */}
+                                {bestVoice && (
+                                    <>
                                         <option
-                                            key={voice.name}
-                                            value={voice.name}
+                                            key={bestVoice.name}
+                                            value={bestVoice.name}
                                         >
-                                            {voice.name}
-                                            {!hasLanguageInName
-                                                ? ` (${getReadableLanguageName(voice.lang)})`
+                                            {bestVoice.name}
+                                            {!bestVoice.name.includes("[") &&
+                                            !bestVoice.name.includes("(")
+                                                ? ` (${getReadableLanguageName(bestVoice.lang)})`
                                                 : ""}
-                                            {isBestVoice ? " (default)" : ""}
+                                            {" (default)"}
                                         </option>
-                                    );
-                                })}
+                                        <option
+                                            disabled
+                                            className="border-t border-gray-500"
+                                        >
+                                            ──────────
+                                        </option>
+                                    </>
+                                )}
+                                {/* Rest of the voices */}
+                                {voices
+                                    .filter(
+                                        (voice) =>
+                                            voice.name !== bestVoice?.name,
+                                    )
+                                    .map((voice) => {
+                                        const hasLanguageInName =
+                                            voice.name.includes("[") ||
+                                            voice.name.includes("(");
+
+                                        return (
+                                            <option
+                                                key={voice.name}
+                                                value={voice.name}
+                                            >
+                                                {voice.name}
+                                                {!hasLanguageInName
+                                                    ? ` (${getReadableLanguageName(voice.lang)})`
+                                                    : ""}
+                                            </option>
+                                        );
+                                    })}
                             </select>
                         </div>
 
