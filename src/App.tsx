@@ -232,11 +232,14 @@ function App() {
                                         </option>
                                     </>
                                 )}
-                                {/* Rest of the voices */}
+                                {/* Rest of the voices, sorted alphabetically */}
                                 {voices
                                     .filter(
                                         (voice) =>
                                             voice.name !== bestVoice?.name,
+                                    )
+                                    .sort((a, b) =>
+                                        a.name.localeCompare(b.name),
                                     )
                                     .map((voice) => {
                                         const hasLanguageInName =
