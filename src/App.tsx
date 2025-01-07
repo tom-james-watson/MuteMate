@@ -71,6 +71,7 @@ function App() {
         if (!voice) {
             voice = availableVoices.find((v) => v.name.includes("Google"));
         }
+        return voice;
     };
 
     const speak = (text: string, id: number) => {
