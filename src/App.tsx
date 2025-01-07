@@ -63,15 +63,30 @@ function App() {
 
     const findBestVoice = (availableVoices: SpeechSynthesisVoice[]) => {
         const lang = navigator.language;
-        let voice = availableVoices.find(
+
+        const google = availableVoices.find(
             (v) =>
                 v.name.includes("Google") &&
                 v.lang.toLowerCase() === lang.toLowerCase(),
         );
-        if (!voice) {
-            voice = availableVoices.find((v) => v.name.includes("Google"));
-        }
-        return voice;
+        if (google) return google;
+
+        const macOSDaniel = availableVoices.find((v) =>
+            v.name.toLowerCase().includes("daniel"),
+        );
+        if (macOSDaniel) return macOSDaniel;
+
+        const microsoft = availableVoices.find(
+            (v) =>
+                v.name.includes("Microsoft") &&
+                v.lang.toLowerCase() === lang.toLowerCase(),
+        );
+        if (microsoft) return microsoft;
+
+        const anyGoogle = availableVoices.find((v) =>
+            v.name.includes("Google"),
+        );
+        if (anyGoogle) return anyGoogle;
     };
 
     const speak = (text: string, id: number) => {
