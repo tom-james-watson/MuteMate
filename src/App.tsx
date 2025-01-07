@@ -198,7 +198,7 @@ function App() {
                             >
                                 {voices.map((voice) => (
                                     <option key={voice.name} value={voice.name}>
-                                        {voice.name}
+                                        {voice.name} [{voice.lang}]
                                     </option>
                                 ))}
                             </select>
