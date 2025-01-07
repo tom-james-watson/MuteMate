@@ -13,6 +13,18 @@ interface Preferences {
     voice: string;
 }
 
+const getReadableLanguageName = (langCode: string) => {
+    try {
+        const languageNames = new Intl.DisplayNames([navigator.language], {
+            type: "language",
+            style: "long",
+        });
+        return languageNames.of(langCode);
+    } catch (error) {
+        return langCode; // Fallback to original code if something goes wrong
+    }
+};
+
 function App() {
     const [input, setInput] = useState("");
     const [currentlyPlaying, setCurrentlyPlaying] = useState<number | null>(
@@ -27,21 +39,23 @@ function App() {
         );
     });
     const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+    const [bestVoice, setBestVoice] = useState<
+        SpeechSynthesisVoice | undefined
+    >();
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const loadVoices = () => {
             const availableVoices = speechSynthesis.getVoices();
             setVoices(availableVoices);
+            const best = findBestVoice(availableVoices);
+            setBestVoice(best);
 
-            if (!preferences.voice) {
-                const bestVoice = findBestVoice(availableVoices);
-                if (bestVoice) {
-                    setPreferences((prev) => ({
-                        ...prev,
-                        voice: bestVoice.name,
-                    }));
-                }
+            if (!preferences.voice && best) {
+                setPreferences((prev) => ({
+                    ...prev,
+                    voice: best.name,
+                }));
             }
         };
 
@@ -196,11 +210,26 @@ function App() {
                                 }
                                 className="w-full p-2 bg-gray-600 rounded"
                             >
-                                {voices.map((voice) => (
-                                    <option key={voice.name} value={voice.name}>
-                                        {voice.name} [{voice.lang}]
-                                    </option>
-                                ))}
+                                {voices.map((voice) => {
+                                    const isBestVoice =
+                                        voice.name === bestVoice?.name;
+                                    const hasLanguageInName =
+                                        voice.name.includes("[") ||
+                                        voice.name.includes("(");
+
+                                    return (
+                                        <option
+                                            key={voice.name}
+                                            value={voice.name}
+                                        >
+                                            {voice.name}
+                                            {!hasLanguageInName
+                                                ? ` (${getReadableLanguageName(voice.lang)})`
+                                                : ""}
+                                            {isBestVoice ? " (default)" : ""}
+                                        </option>
+                                    );
+                                })}
                             </select>
                         </div>
 
